@@ -62,6 +62,9 @@ RUN luarocks install lapis
 # For encoding & decoding json
 RUN luarocks install lua-cjson
 
+# For JWT
+# RUN luarocks install luajwtjitsi
+
 # uuid for MySQL new insertions
 RUN luarocks install uuid
 

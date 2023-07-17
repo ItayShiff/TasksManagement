@@ -4,24 +4,21 @@ local uuid = require("uuid")
 local socket = require("socket")
 uuid.randomseed(socket.gettime()*10000)
 
+
 local db = {}
 
 function db.connect()
   local driver = require("luasql.mysql")
   local env = driver.mysql()
   return env:connect("todoDatabase", "itay", "asdASD123!@#", "127.0.0.1") -- Must have 127.0.0.1 as param to connect to localhost from lapis server & docker
+  -- if not conn then
+  --   print("Error!", err)
+  -- end
 end
 
 
 db.conn = db.connect();
 
--- if not conn then
---   print("Error!", err)
--- end
-
--- print(conn)
--- local cursor = (conn:execute("SELECT * FROM mytable"))
--- conn:execute("INSERT INTO users (name, email) VALUES ('John Doe', 'johndoe@example.com')");
 
 -- Generic function to query tasks, if not given param should_not_convertToJson, so we convert to JSON by default
 local function QueryTasks(query, should_not_convertToJson)
@@ -79,9 +76,6 @@ end
 
 function db.InsertNewTask(user_id, title, description, completed)
   local new_task_id = uuid()
-
-  print(new_task_id)
-
   local newCompletedValue = 1
   if (completed == "false") then
     newCompletedValue = 0
@@ -93,9 +87,66 @@ function db.InsertNewTask(user_id, title, description, completed)
   db.conn:execute(query)
 end
 
+
+-- Generic function to query Users, if not given param should_not_convertToJson, so we convert to JSON by default
+local function QueryUsers(query, should_not_convertToJson)
+  local cursor = db.conn:execute(query)
+  local row = cursor:fetch ({}, "a")	-- the rows will be indexed by field names
+  -- print(cursor)
+  local result = {};
+  
+  while row do  -- Scan for next rows if existing
+    table.insert(result, {
+      id = row.id,
+      password = row.password
+    })
+    row = cursor:fetch (row, "a")	-- reusing the table of results
+  end
+
+  cursor:close()
+
+  if should_not_convertToJson then
+    return result
+  end
+    
+  return JSONConvertor.encode(result)
+end
+
+
 function db.DeleteSpecificTask(task_id)
   local query = string.format("DELETE FROM Tasks where id='%s'", task_id)
   -- local status, err = db.conn:execute(query)
+  db.conn:execute(query)
+end
+
+
+function db.isUsernameTaken(username)
+  local query = string.format("SELECT * FROM Users where id='%s'", username)
+  local res = QueryUsers(query, utils.DONT_DO_JSON)
+  -- If there is such user
+  if #res ~= 0 then
+    return true
+  end
+
+  return false
+end
+
+
+function db.isUserDataValid(username, password)
+  local query = string.format("SELECT * FROM Users where id='%s' and password='%s'", username, password)
+  local res = QueryUsers(query, utils.DONT_DO_JSON)
+  -- If there is such user
+  if #res == 1 then
+    return true
+  end
+
+  return false
+end
+
+
+function db.signUp(username, password)
+  -- Add to database
+  local query = string.format("INSERT INTO Users VALUES ('%s', '%s')", username, password)
   db.conn:execute(query)
 end
 

@@ -153,3 +153,11 @@
 2023/07/17 01:25:23 [alert] 9629#9629: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
 2023/07/17 01:27:03 [alert] 9841#9841: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
 2023/07/17 01:29:27 [alert] 10391#10391: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:09:00 [alert] 12821#12821: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:22:33 [alert] 15234#15234: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:42:26 [alert] 15667#15667: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:43:04 [alert] 15824#15824: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:43:31 [alert] 15948#15948: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:44:29 [alert] 16135#16135: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:44:52 [alert] 16266#16266: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20
+2023/07/17 02:58:15 [alert] 17068#17068: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:20

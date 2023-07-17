@@ -1,6 +1,7 @@
 local lapis = require("lapis")
 local app = lapis.Application()
 local db = require("dbFile")
+local auth = require("auth")
 local utils = require("utils")
 local JSONConvertor = require('cjson')
 local respond_to = require("lapis.application").respond_to
@@ -20,13 +21,16 @@ end)
 
 -- Retrieve a specific task
 app:get("/task/:id", function(self)
-  -- Verify the user with jwt !!!!!!!!!!!
   return db.GetSpecificTask(self.params.id)
 end)
 
 -- Update a specific task
 app:put("/task/:id", function(self)
-  -- Verify the user with jwt !!!!!!!!!!!
+  -- Validating user's token
+  if self.params.token == nil or not auth.validateUser(self.params.token) then
+    print("Not authenticated")
+    return ("Not authenticated")
+  end
 
   local task_to_be_updated = db.GetSpecificTask(self.params.id, utils.DONT_DO_JSON)
 
@@ -52,7 +56,12 @@ app:put("/task/:id", function(self)
 end)
 
 app:delete("/task/:id", function(self)
-  -- Verify the user with jwt !!!!!!!!!!!
+  -- Validating user's token
+  if self.params.token == nil or not auth.validateUser(self.params.token) then
+    print("Not authenticated")
+    return ("Not authenticated")
+  end
+
   db.DeleteSpecificTask(self.params.id)
   return "good"
 end)
@@ -60,7 +69,12 @@ end)
 
 -- Create a new task, here accepting additional parameter as userId, make sure
 app:post("/task", capture_errors(function(self)
-  -- return ("POST SPECIFIC TASK")
+  -- Validating user's token
+  if self.params.token == nil or not auth.validateUser(self.params.token) then
+    print("Not authenticated")
+    return ("Not authenticated")
+  end
+
   if (self.params.userId == nil) then
     print("Missing usedId parameter")
   end
@@ -85,12 +99,33 @@ end))
 app:post("/users", capture_errors(function(self)
   if (self.params.username == nil or self.params.password == nil) then
     -- throw error
-    -- print("BAD!!")
-    yield_error("BADDDDDD")
-    return
+    yield_error("missing information, username or password")
+    return ("missing information, username or password")
+  end
+  
+  if db.isUsernameTaken(self.params.username) then
+    yield_error("username is taken")
+    return ("username is taken")
   end
 
-  db.signUp(self.params.username, self.params.password)
+  return db.signUp(self.params.username, self.params.password)
 end))
+
+
+app:post("/auth", capture_errors(function(self)
+  if (self.params.username == nil or self.params.password == nil) then
+    -- throw error
+    yield_error("missing information, username or password")
+    return ("missing information, username or password")
+  end
+
+  if not db.isUserDataValid(self.params.username, self.params.password) then
+    yield_error("wrong username or password given")
+    return ("wrong username or password given")
+  end
+  
+  return auth.signIn(self.params.username, self.params.password)
+end))
+
 
 return app
