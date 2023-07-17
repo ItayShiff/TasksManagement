@@ -4,24 +4,38 @@ local db = require("dbFile")
 local auth = require("auth")
 local utils = require("utils")
 local JSONConvertor = require('cjson')
-local respond_to = require("lapis.application").respond_to
 local app_helpers = require("lapis.application")
+
+local json_params = require("lapis.application").json_params
+local before_filter = require("lapis.application").before_filter
 
 local capture_errors, yield_error = app_helpers.capture_errors, app_helpers.yield_error
 
+
+app:before_filter(function(self)
+  self.res.headers["Content-Type"] = "application/json"
+  self.res.headers["Access-Control-Allow-Origin"] = "*" -- So that we can access it from localhost:3000 in Front End (Avoid CORS)
+end)
+
+
 -- Retrieve all tasks or all tasks for specific user if optional query parameter used
 app:get("/tasks", function(self)
-  -- Optional query parameter userId
-  if self.params.userId then
-    return db.GetAllTasksOfSpecificUserID(self.params.userId)
+  local result = nil
+  if self.params.userId then          
+    result = db.GetAllTasksOfSpecificUserID(self.params.userId)
+  else
+    result = db.GetAllTasks()
   end
 
-  return db.GetAllTasks()
+  return { json = result, status = 200 }
 end)
 
 -- Retrieve a specific task
 app:get("/task/:id", function(self)
-  return db.GetSpecificTask(self.params.id)
+  return {
+    json = db.GetSpecificTask(self.params.id),
+    status = 200
+  }
 end)
 
 -- Update a specific task

@@ -42,11 +42,13 @@ local function QueryTasks(query, should_not_convertToJson)
 
   cursor:close()
 
-  if should_not_convertToJson then
-    return result
-  end
+  -- if should_not_convertToJson then
+  --   return result
+  -- end
     
-  return JSONConvertor.encode(result)
+  -- return JSONConvertor.encode(result)
+
+  return result
 end
 
 

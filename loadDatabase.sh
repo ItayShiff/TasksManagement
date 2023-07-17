@@ -11,4 +11,3 @@ mysql -u itay -pasdASD123!@# todoDatabase < /app/server/luasql.sql;  # Importing
 
 # npm run dev-server
 /bin/bash
-service mysql status

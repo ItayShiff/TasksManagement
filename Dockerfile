@@ -63,7 +63,7 @@ RUN luarocks install lapis
 RUN luarocks install lua-cjson
 
 # For JWT
-# RUN luarocks install luajwtjitsi
+RUN luarocks install luajwtjitsi
 
 # uuid for MySQL new insertions
 RUN luarocks install uuid

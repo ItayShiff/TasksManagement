@@ -1,0 +1,49 @@
+#wrapperToWrapperSignIn {
+  background: #e4e4e4;
+  /* background: linear-gradient(0deg, rgba(52, 52, 52, 1) 0%, rgba(61, 61, 61, 1) 35%, rgba(52, 52, 52, 1) 100%); */
+  width: 100%;
+  padding: 15px;
+}
+#wrapperSignIn {
+  /* background: #404040; */
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  /* box-shadow: 0px 0px 2px 0px #c1c1c1; */
+  box-shadow: 0 0 5px 1px grey;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  text-align: left;
+  margin-left: 5%;
+}
+
+.input {
+  margin-bottom: 25px;
+  width: 90%;
+  margin-top: 10px;
+}
+
+#signInTitle {
+  font-size: 22px;
+  margin-bottom: 10px;
+  padding: 10px 0px;
+}
+
+.buttonsWrapper button {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  transition: background 200ms;
+}
+
+.buttonsWrapper button:hover {
+  background: #d0d0d0;
+}
+
+#signInTitle,
+.buttonsWrapper button {
+  background: #dedede;
+}
