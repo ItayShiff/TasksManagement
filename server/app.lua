@@ -107,12 +107,12 @@ app:post("/users", json_params(function(self)
     return { json = { message = "Username is taken already"}, status = 409 }
   end
 
-  return { json = db.signUp(self.params.username, self.params.password), status = 200 }
+  db.signUp(self.params.username, self.params.password)
+  return { json = "good", status = 200 }
 end))
 
 
 -- Login
--- app:post("/auth", json_params(function(self)
 app:post("/auth", json_params(function(self)
   if (self.params.username == nil or self.params.password == nil) then
     return { json = { message = "Missing username or password parameter"}, status = 422 }
@@ -122,7 +122,19 @@ app:post("/auth", json_params(function(self)
     return { json = { message = "Wrong username or password given"}, status = 401 }
   end
   
-  return { json = auth.signIn(self.params.username, self.params.password), status = 200 }
+  local token = auth.signIn(self.params.username, self.params.password)
+  return { json = token, status = 200 }
+end))
+
+app:post("/validate-token", json_params(function(self)
+  print("Here we are !!!!!!!!!!!!!!!!!!")
+  local username = auth.getUsernameFromToken(self.params.token)
+
+  if username == nil then
+    return { json = nil, status = 400 }
+  else
+    return { json = username, status =  200 }
+  end
 end))
 
 

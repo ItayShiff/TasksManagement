@@ -32,11 +32,21 @@
   padding: 10px 0px;
 }
 
+.buttonsWrapper {
+  display: flex;
+}
+
 .buttonsWrapper button {
   width: 50%;
   padding: 10px;
   font-size: 16px;
   transition: background 200ms;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.buttonsWrapper button span {
+  margin-left: 5px;
 }
 
 .buttonsWrapper button:hover {
@@ -46,4 +56,26 @@
 #signInTitle,
 .buttonsWrapper button {
   background: #dedede;
+}
+
+#passwordWrapper {
+  position: relative;
+  right: -7px;
+}
+#passwordWrapper span {
+  position: relative;
+  cursor: pointer;
+  left: -16px;
+}
+
+/* #passwordWrapper span::after { */
+.shownPassword::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7.5px;
+  border-top: 2px solid rgb(24, 24, 24);
+  width: 105%;
+  transform: rotate(-45deg);
+  /* transform-origin: 0% 0%; */
 }

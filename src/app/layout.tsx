@@ -7,6 +7,7 @@ import { useContext, useMemo, useState } from "react";
 import { User } from "@/components/User/User";
 import UserContext from "@/components/context/UserContext";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ToastContainer />
         <UserContext.Provider value={userProviderVal}>
           <Header />
           <main>{children}</main>

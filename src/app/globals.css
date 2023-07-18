@@ -3,6 +3,7 @@ body {
   font-family: Arial;
   min-height: 100vh;
   background: #f3f3f3;
+  user-select: none;
 }
 
 body,
@@ -16,6 +17,10 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
+}
+
+a {
+  text-decoration: none;
 }
 
 button,
@@ -46,13 +51,14 @@ main {
   align-items: center;
 }
 
-a {
-  text-decoration: none;
-  background: #2b2b2b;
+header a,
+header span {
   color: white;
 }
 
-header a {
+header a,
+header #signout {
+  background: #2b2b2b;
   border: 1px solid #727272;
   padding: 7px;
   margin: 7px;
@@ -63,8 +69,9 @@ header a {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  cursor: pointer;
 }
-header a span {
+header span {
   margin-left: 5px;
 }
 

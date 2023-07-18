@@ -1,8 +1,14 @@
 "use client";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useLayoutEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
+import { UserUseState } from "@/components/User/User";
+import UserContext from "@/components/context/UserContext";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { AiFillEye, AiOutlineUserAdd } from "react-icons/ai";
+import { PiSignInBold } from "react-icons/pi";
 
 type Props = {};
 
@@ -16,6 +22,12 @@ function Index({}: Props) {
 
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
+  const [isShownPassword, setIsShownPassword] = useState(false);
+
+  const userUseStateData: UserUseState = useContext(UserContext);
+  const { setUser } = userUseStateData;
+
+  const router: AppRouterInstance = useRouter();
 
   useLayoutEffect(() => {
     document.title = "Sign In";
@@ -33,63 +45,97 @@ function Index({}: Props) {
         password: passwordInput.current?.value,
       };
 
-      console.log(dataToSend);
+      const { data } = await axios.post(`${process.env.API}/auth`, dataToSend); // Returning user token
 
-      const res = await axios.post(`${process.env.API}/auth`, dataToSend);
-      // const res = await axios.post(`${process.env.API}/auth`, dataToSend, { mode: "no-cors" });
-      // const test = await fetch(`${process.env.API}/auth`, {
-      //   method: "GET", // or 'PUT'
-      //   mode: "cors",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   // body: JSON.stringify(dataToSend),
-      // });
-      // console.log(test);
-      // console.log(test.json());
+      localStorage.setItem("user", data); // Keep in memory with localStorage
+      setUser({ username: dataToSend.username, token: data });
 
-      // console.log(res.data);
-
-      toast.success("Success");
-      setCurrentMode(Mode.sign_up);
-    } catch (err: unknown) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.success("Successfully logged in");
+      router.push("/");
+    } catch (err: any) {
+      if (err?.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
-  const signup = () => {
+  const signup = async () => {
     if (!usernameInput.current?.value || !passwordInput.current?.value) {
       toast.error("Username or password is missing");
       return;
     }
 
-    toast.success("Success");
-    setCurrentMode(Mode.sign_in);
+    try {
+      const dataToSend = {
+        username: usernameInput.current?.value,
+        password: passwordInput.current?.value,
+      };
+
+      const res = await axios.post(`${process.env.API}/users`, dataToSend); // Returning user token
+
+      toast.success(
+        <div>
+          <div>Successfully signed up!</div>
+          <div>You can login in now</div>
+        </div>
+      );
+      setCurrentMode(Mode.sign_in);
+
+      // Resetting for login
+      usernameInput.current.value = "";
+      passwordInput.current.value = "";
+    } catch (err: any) {
+      if (err?.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
+  const togglePassword = () => {
+    setIsShownPassword((isShownPasswordCurrentValue) => !isShownPasswordCurrentValue);
   };
 
   return (
     <div id={styles.wrapperToWrapperSignIn}>
       <div id={styles.wrapperSignIn}>
-        <ToastContainer />
         {currentMode === Mode.sign_in && <div id={styles.signInTitle}>Login Form</div>}
         {currentMode === Mode.sign_up && <div id={styles.signInTitle}>Registration Form</div>}
 
         <input type="text" id="user" name="user" ref={usernameInput} className={styles.input} placeholder="Username" />
 
-        <input type="password" id="pass" name="pass" ref={passwordInput} className={styles.input} placeholder="Password" />
+        <div id={styles.passwordWrapper}>
+          <input
+            type={isShownPassword == false ? "password" : "text"}
+            ref={passwordInput}
+            className={styles.input}
+            placeholder="Password"
+          />
+          <span onClick={togglePassword} className={isShownPassword === true ? styles.shownPassword : undefined}>
+            <AiFillEye size="14" />
+          </span>
+        </div>
 
         {currentMode === Mode.sign_in && (
           <div className={styles.buttonsWrapper}>
-            <button onClick={signin}>Login</button>
-            <button onClick={() => setCurrentMode(Mode.sign_up)}>Signup</button>
+            <button onClick={signin}>
+              <PiSignInBold />
+              <span>Login</span>
+            </button>
+            <button onClick={() => setCurrentMode(Mode.sign_up)}>Switch To Signup</button>
           </div>
         )}
 
         {currentMode === Mode.sign_up && (
           <div className={styles.buttonsWrapper}>
-            <button onClick={signup}>Register</button>
-            <button onClick={() => setCurrentMode(Mode.sign_in)}>Signin</button>
+            <button onClick={signup}>
+              <AiOutlineUserAdd />
+              <span>Register</span>
+            </button>
+            <button onClick={() => setCurrentMode(Mode.sign_in)}>Switch To Signin</button>
           </div>
         )}
       </div>

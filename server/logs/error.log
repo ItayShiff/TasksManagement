@@ -274,3 +274,6 @@ stack traceback:
 2023/07/18 13:55:08 [alert] 3156#3156: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
 2023/07/18 13:57:41 [alert] 3639#3639: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
 2023/07/18 13:58:02 [alert] 3953#3953: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
+2023/07/18 14:01:50 [alert] 4710#4710: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
+2023/07/18 14:53:17 [alert] 20579#20579: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
+2023/07/18 15:44:13 [alert] 28376#28376: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21

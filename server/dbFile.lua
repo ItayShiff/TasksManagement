@@ -3,8 +3,7 @@ local uuid = require("uuid")
 local socket = require("socket")
 uuid.randomseed(socket.gettime()*10000)
 
-
-local db = {}
+db = {}    -- Global variable
 
 function db.connect()
   local driver = require("luasql.mysql")
