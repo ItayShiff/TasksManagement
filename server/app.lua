@@ -3,7 +3,6 @@ local app = lapis.Application()
 local db = require("dbFile")
 local auth = require("auth")
 local utils = require("utils")
-local JSONConvertor = require('cjson')
 local app_helpers = require("lapis.application")
 
 local json_params = require("lapis.application").json_params
@@ -14,12 +13,12 @@ local capture_errors, yield_error = app_helpers.capture_errors, app_helpers.yiel
 
 app:before_filter(function(self)
   self.res.headers["Content-Type"] = "application/json"
-  self.res.headers["Access-Control-Allow-Origin"] = "*" -- So that we can access it from localhost:3000 in Front End (Avoid CORS)
+  -- self.res.headers["Access-Control-Allow-Origin"] = "*" -- Added in nginx.conf so that we can access it from localhost:3000 in Front End (Avoid CORS)
 end)
 
 
 -- Retrieve all tasks or all tasks for specific user if optional query parameter used
-app:get("/tasks", function(self)
+app:get("/tasks", json_params(function(self)
   local result = nil
   if self.params.userId then          
     result = db.GetAllTasksOfSpecificUserID(self.params.userId)
@@ -28,34 +27,32 @@ app:get("/tasks", function(self)
   end
 
   return { json = result, status = 200 }
-end)
+end))
+
 
 -- Retrieve a specific task
 app:get("/task/:id", function(self)
-  return {
-    json = db.GetSpecificTask(self.params.id),
-    status = 200
-  }
+  return { json = db.GetSpecificTask(self.params.id), status = 200 }
 end)
 
+
 -- Update a specific task
-app:put("/task/:id", function(self)
-  -- Validating user's token
-  if self.params.token == nil or not auth.validateUser(self.params.token) then
-    print("Not authenticated")
-    return ("Not authenticated")
+app:put("/task/:id", json_params(function(self)
+  if not auth.validateUser(self.params.token) then
+    return { json = { message = "Not authenticated"}, status = 401 }
   end
 
   local task_to_be_updated = db.GetSpecificTask(self.params.id, utils.DONT_DO_JSON)
-
-  -- Making sure the task exists before we update it, if it's length is 0 so it doesn't exist
-  if #task_to_be_updated == 0 then 
-    return "{}"
+  
+  -- Make sure the task exists before we update it, if it's length is 0 so it doesn't exist
+  local doesThisTaskNotExist = #task_to_be_updated == 0
+  if doesThisTaskExist then 
+    return { json = { message = "There isn't such task"}, status = 404 }
   end
   
-  -- Make sure it is the the owner of the task TODO !!!!!
+  -- Make sure it is the the owner of the task
   if self.params.user_id == nil or task_to_be_updated[1].user_id ~= self.params.user_id then
-    return "NOT ALLOWED"
+    return { json = { message = "You're not allowed to edit this task"}, status = 401 }
   end
  
   -- Using optional chaining to override only the new values and preserving old ones
@@ -65,80 +62,67 @@ app:put("/task/:id", function(self)
                         utils.OptionalChaining(self.params.description, task_to_be_updated[1].description),
                         utils.OptionalChaining(self.params.completed, task_to_be_updated[1].completed))
 
-  -- -- TODO HERE!!!!
-  return "success"
-end)
+  return { json = "good", status = 200 }
+end))
 
-app:delete("/task/:id", function(self)
-  -- Validating user's token
-  if self.params.token == nil or not auth.validateUser(self.params.token) then
-    print("Not authenticated")
-    return ("Not authenticated")
+
+app:delete("/task/:id", json_params(function(self)
+  if not auth.validateUser(self.params.token) then
+    return { json = { message = "Not authenticated"}, status = 401 }
   end
 
   db.DeleteSpecificTask(self.params.id)
-  return "good"
-end)
+  return { json = "good", status = 200 }
+end))
 
 
--- Create a new task, here accepting additional parameter as userId, make sure
-app:post("/task", capture_errors(function(self)
-  -- Validating user's token
-  if self.params.token == nil or not auth.validateUser(self.params.token) then
-    print("Not authenticated")
-    return ("Not authenticated")
+-- Create a new task, here accepting additional parameter as userId
+app:post("/task", json_params(function(self)
+  if not auth.validateUser(self.params.token) then
+    return { json = { message = "Not authenticated"}, status = 401 }
   end
 
   if (self.params.userId == nil) then
-    print("Missing usedId parameter")
+    return { json = { message = "Missing userId parameter"}, status = 422 }
   end
 
-  -- Make sure we achieved 
-  -- Verify the user with jwt !!!!!!!!!!!
 
   if (self.params.title == nil or self.params.description == nil or self.params.completed == nil) then
-    -- throw error
-    -- print("BAD!!")
-    yield_error("BADDDDDD")
-    return
+    return { json = { message = "Missing title or description or completed parameter"}, status = 422 }
   end
 
 
   db.InsertNewTask(self.params.userId, self.params.title, self.params.description, self.params.completed)
-  return "good"
+  return { json = "good", status = 200 }
 end))
 
 
 -- Create new user
-app:post("/users", capture_errors(function(self)
+app:post("/users", json_params(function(self)
   if (self.params.username == nil or self.params.password == nil) then
-    -- throw error
-    yield_error("missing information, username or password")
-    return ("missing information, username or password")
+    return { json = { message = "Missing username or password parameter"}, status = 422 }
   end
   
   if db.isUsernameTaken(self.params.username) then
-    yield_error("username is taken")
-    return ("username is taken")
+    return { json = { message = "Username is taken already"}, status = 409 }
   end
 
-  return db.signUp(self.params.username, self.params.password)
+  return { json = db.signUp(self.params.username, self.params.password), status = 200 }
 end))
 
 
-app:post("/auth", capture_errors(function(self)
+-- Login
+-- app:post("/auth", json_params(function(self)
+app:post("/auth", json_params(function(self)
   if (self.params.username == nil or self.params.password == nil) then
-    -- throw error
-    yield_error("missing information, username or password")
-    return ("missing information, username or password")
+    return { json = { message = "Missing username or password parameter"}, status = 422 }
   end
 
   if not db.isUserDataValid(self.params.username, self.params.password) then
-    yield_error("wrong username or password given")
-    return ("wrong username or password given")
+    return { json = { message = "Wrong username or password given"}, status = 401 }
   end
   
-  return auth.signIn(self.params.username, self.params.password)
+  return { json = auth.signIn(self.params.username, self.params.password), status = 200 }
 end))
 
 

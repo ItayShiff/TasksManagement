@@ -6,7 +6,7 @@
 .pnp.js
 
 # Lua lapis server logs
-/server/logs/
+server/logs/
 
 # testing
 /coverage

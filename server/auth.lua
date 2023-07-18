@@ -2,7 +2,6 @@
 local jwt = require("luajwtjitsi")
 local secret_token = "6e11ff524a46e5a4f30f9a7b12d2dfa3bc57cd2c27ef03b55"
 local alg = "HS256" -- (default alg for JWT)
-local JSONConvertor = require('cjson')
 
 local auth = {}
 
@@ -13,14 +12,16 @@ function auth.signIn(_username, _password)
         password = _password
     }
 
-    local _token, err = jwt.encode(userData, secret_token, alg)
-
-    return JSONConvertor.encode({
-        token = _token
-    })
+    local token, err = jwt.encode(userData, secret_token, alg)
+    return token
 end
 
+
 function auth.validateUser(token)
+    if token == nil then
+        return false
+    end
+
     local decoded, err = jwt.verify(token, alg, secret_token)
     if decoded == nil then
         return false

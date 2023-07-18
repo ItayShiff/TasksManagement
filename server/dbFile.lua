@@ -1,4 +1,3 @@
-local JSONConvertor = require('cjson')
 local utils = require("utils")
 local uuid = require("uuid")
 local socket = require("socket")
@@ -20,11 +19,10 @@ end
 db.conn = db.connect();
 
 
--- Generic function to query tasks, if not given param should_not_convertToJson, so we convert to JSON by default
-local function QueryTasks(query, should_not_convertToJson)
+-- Generic function to query tasks
+local function QueryTasks(query)
   local cursor = db.conn:execute(query)
   local row = cursor:fetch ({}, "a")	-- the rows will be indexed by field names
-  -- print(cursor)
   local result = {};
   
   while row do  -- Scan for next rows if existing
@@ -41,32 +39,25 @@ local function QueryTasks(query, should_not_convertToJson)
   end
 
   cursor:close()
-
-  -- if should_not_convertToJson then
-  --   return result
-  -- end
-    
-  -- return JSONConvertor.encode(result)
-
   return result
 end
 
 
-function db.GetAllTasks(should_not_convertToJson) 
+function db.GetAllTasks() 
   local query = "SELECT * FROM Tasks"
-  return QueryTasks(query, should_not_convertToJson)
+  return QueryTasks(query)
 end
 
 
-function db.GetSpecificTask(task_id, should_not_convertToJson)
+function db.GetSpecificTask(task_id)
   local query = string.format("SELECT * FROM Tasks where id='%s'", task_id)
-  return QueryTasks(query, should_not_convertToJson)
+  return QueryTasks(query)
 end
 
 
-function db.GetAllTasksOfSpecificUserID(user_id, should_not_convertToJson)
+function db.GetAllTasksOfSpecificUserID(user_id)
   local query = string.format("SELECT * FROM Tasks where user_id='%s'", user_id)
-  return QueryTasks(query, should_not_convertToJson)
+  return QueryTasks(query)
 end
 
 
@@ -90,11 +81,10 @@ function db.InsertNewTask(user_id, title, description, completed)
 end
 
 
--- Generic function to query Users, if not given param should_not_convertToJson, so we convert to JSON by default
-local function QueryUsers(query, should_not_convertToJson)
+-- Generic function to query Users
+local function QueryUsers(query)
   local cursor = db.conn:execute(query)
   local row = cursor:fetch ({}, "a")	-- the rows will be indexed by field names
-  -- print(cursor)
   local result = {};
   
   while row do  -- Scan for next rows if existing
@@ -106,12 +96,7 @@ local function QueryUsers(query, should_not_convertToJson)
   end
 
   cursor:close()
-
-  if should_not_convertToJson then
-    return result
-  end
-    
-  return JSONConvertor.encode(result)
+  return result
 end
 
 

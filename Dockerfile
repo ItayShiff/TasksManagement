@@ -59,9 +59,6 @@ RUN wget -O - https://openresty.org/package/pubkey.gpg | gpg --dearmor -o /usr/s
 # Lapis
 RUN luarocks install lapis 
 
-# For encoding & decoding json
-RUN luarocks install lua-cjson
-
 # For JWT
 RUN luarocks install luajwtjitsi
 

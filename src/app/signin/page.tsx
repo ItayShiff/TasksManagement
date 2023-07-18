@@ -33,12 +33,27 @@ function Index({}: Props) {
         password: passwordInput.current?.value,
       };
 
+      console.log(dataToSend);
+
       const res = await axios.post(`${process.env.API}/auth`, dataToSend);
-      console.log(res.data);
+      // const res = await axios.post(`${process.env.API}/auth`, dataToSend, { mode: "no-cors" });
+      // const test = await fetch(`${process.env.API}/auth`, {
+      //   method: "GET", // or 'PUT'
+      //   mode: "cors",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   // body: JSON.stringify(dataToSend),
+      // });
+      // console.log(test);
+      // console.log(test.json());
+
+      // console.log(res.data);
 
       toast.success("Success");
       setCurrentMode(Mode.sign_up);
     } catch (err: unknown) {
+      console.log(err);
       toast.error("Something went wrong");
     }
   };
