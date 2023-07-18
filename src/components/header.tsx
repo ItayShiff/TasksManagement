@@ -16,8 +16,6 @@ const Header = (props: Props) => {
   const userUseStateData: UserUseState = useContext(UserContext);
   const { user, setUser } = userUseStateData;
 
-  console.log(user);
-
   const SignOut = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -25,7 +23,7 @@ const Header = (props: Props) => {
 
   const setUsernameIfValidatedToken = async (token: string): Promise<void> => {
     try {
-      const { data } = await axios.post(`${process.env.API}/validate-token`, { token });
+      const { data } = await axios.post(`${process.env.API}/get-username-from-token`, { token });
       setUser({
         username: data,
         token: token,
@@ -35,18 +33,21 @@ const Header = (props: Props) => {
     }
   };
 
+  const setUsernameIfLoggedInThePast = () => {
+    const token = localStorage.getItem("user");
+    if (token) {
+      setUsernameIfValidatedToken(token);
+    }
+  };
+
   // On initial page load, loading user data if logged in the past
   useLayoutEffect(() => {
     if (user === null) {
-      console.log("called HERE!");
-      const token = localStorage.getItem("user");
-      if (token) {
-        setUsernameIfValidatedToken(token);
-      }
+      setUsernameIfLoggedInThePast();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const { user }: { user: User | null } = useContext(UserContext);
   return (
     <header>
       {user !== null ? (

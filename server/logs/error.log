@@ -277,3 +277,24 @@ stack traceback:
 2023/07/18 14:01:50 [alert] 4710#4710: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
 2023/07/18 14:53:17 [alert] 20579#20579: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
 2023/07/18 15:44:13 [alert] 28376#28376: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
+2023/07/18 16:02:19 [alert] 31598#31598: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:21
+2023/07/18 16:04:56 [alert] 32247#32247: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:05:43 [alert] 320#320: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:05:43 [error] 320#320: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:06:15 [alert] 800#800: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:06:15 [error] 800#800: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:07:59 [alert] 1081#1081: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:07:59 [error] 1081#1081: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:09:09 [alert] 570#570: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:09:09 [error] 570#570: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:11:52 [alert] 799#799: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:12:03 [alert] 1035#1035: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:13:18 [alert] 1605#1605: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:15:00 [alert] 1877#1877: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:16:58 [alert] 883#883: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:17:26 [alert] 1043#1043: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:17:26 [error] 1043#1043: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:17:34 [alert] 1100#1100: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:17:34 [error] 1100#1100: init_by_lua error: init_by_lua:3: unexpected symbol near '#'
+2023/07/18 16:17:47 [alert] 1163#1163: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/18 16:17:56 [alert] 1246#1246: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22

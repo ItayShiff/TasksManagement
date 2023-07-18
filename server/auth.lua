@@ -2,7 +2,7 @@
 local jwt = require("luajwtjitsi")
 local secret_token = "6e11ff524a46e5a4f30f9a7b12d2dfa3bc57cd2c27ef03b55"
 local alg = "HS256" -- (default alg for JWT)
-local db = require("dbFile")
+local db = require("dbController")
 
 local auth = {}
 

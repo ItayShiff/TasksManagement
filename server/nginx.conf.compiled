@@ -13,6 +13,7 @@ http {
 
   init_by_lua_block {
     require "lpeg"
+    require "dbController" 
   }
 
 

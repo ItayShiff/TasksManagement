@@ -1,6 +1,6 @@
 local lapis = require("lapis")
 local app = lapis.Application()
-local db = require("dbFile")
+local db = require("dbController")
 local auth = require("auth")
 local utils = require("utils")
 local app_helpers = require("lapis.application")
@@ -126,8 +126,7 @@ app:post("/auth", json_params(function(self)
   return { json = token, status = 200 }
 end))
 
-app:post("/validate-token", json_params(function(self)
-  print("Here we are !!!!!!!!!!!!!!!!!!")
+app:post("/get-username-from-token", json_params(function(self)
   local username = auth.getUsernameFromToken(self.params.token)
 
   if username == nil then

@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -25,13 +25,16 @@ function Index({}: Props) {
   const [isShownPassword, setIsShownPassword] = useState(false);
 
   const userUseStateData: UserUseState = useContext(UserContext);
-  const { setUser } = userUseStateData;
+  const { user, setUser } = userUseStateData;
 
   const router: AppRouterInstance = useRouter();
 
   useLayoutEffect(() => {
-    document.title = "Sign In";
-  }, []);
+    console.log(router, "Huh", user);
+    if (user !== null) {
+      router.push("/");
+    }
+  }, [router, user]);
 
   const signin = async () => {
     if (!usernameInput.current?.value || !passwordInput.current?.value) {
