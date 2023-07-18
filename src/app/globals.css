@@ -3,7 +3,6 @@ body {
   font-family: Arial;
   min-height: 100vh;
   background: #f3f3f3;
-  user-select: none;
 }
 
 body,
@@ -13,7 +12,12 @@ button {
   color: #141414;
 }
 
+h1 {
+  margin: 0;
+}
+
 button {
+  user-select: none;
   border: 0;
   padding: 0;
   cursor: pointer;
@@ -44,12 +48,13 @@ header {
   height: 52px;
 }
 
-main {
-  min-height: calc(100vh - 52px - 26px); /* -26px because it's half of header, for symmetry */
+/* min-height: calc(100vh - 52px - 26px); -26px because it's half of header, for symmetry */
+/* main {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} 
+*/
 
 header a,
 header span {
@@ -78,4 +83,9 @@ header span {
 header a:hover {
   background: #373737;
   color: white;
+}
+
+button {
+  border: 1px solid grey;
+  padding: 10px;
 }

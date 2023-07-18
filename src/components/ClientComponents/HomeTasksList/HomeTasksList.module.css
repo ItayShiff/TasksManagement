@@ -1,0 +1,33 @@
+.task {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid grey;
+}
+
+.task:last-child {
+  border-bottom: 0;
+}
+
+#wrapperTasks {
+  width: 98%;
+  margin: 0 auto;
+}
+
+.task div {
+  margin: 0px 10px;
+}
+.titleAndDescription {
+  flex: 1;
+}
+.titleAndDescription div:first-child {
+  font-weight: bold;
+}
+
+.titleAndDescriptionNames {
+  flex: unset;
+  text-decoration: underline;
+}
+
+.task div button:first-of-type {
+  margin: 0px 10px;
+}

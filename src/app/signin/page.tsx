@@ -30,7 +30,6 @@ function Index({}: Props) {
   const router: AppRouterInstance = useRouter();
 
   useLayoutEffect(() => {
-    console.log(router, "Huh", user);
     if (user !== null) {
       router.push("/");
     }
@@ -103,44 +102,46 @@ function Index({}: Props) {
   };
 
   return (
-    <div id={styles.wrapperToWrapperSignIn}>
-      <div id={styles.wrapperSignIn}>
-        {currentMode === Mode.sign_in && <div id={styles.signInTitle}>Login Form</div>}
-        {currentMode === Mode.sign_up && <div id={styles.signInTitle}>Registration Form</div>}
+    <div id={styles.center}>
+      <div id={styles.wrapperToWrapperSignIn}>
+        <div id={styles.wrapperSignIn}>
+          {currentMode === Mode.sign_in && <div id={styles.signInTitle}>Login Form</div>}
+          {currentMode === Mode.sign_up && <div id={styles.signInTitle}>Registration Form</div>}
 
-        <input type="text" id="user" name="user" ref={usernameInput} className={styles.input} placeholder="Username" />
+          <input type="text" id="user" name="user" ref={usernameInput} className={styles.input} placeholder="Username" />
 
-        <div id={styles.passwordWrapper}>
-          <input
-            type={isShownPassword == false ? "password" : "text"}
-            ref={passwordInput}
-            className={styles.input}
-            placeholder="Password"
-          />
-          <span onClick={togglePassword} className={isShownPassword === true ? styles.shownPassword : undefined}>
-            <AiFillEye size="14" />
-          </span>
+          <div id={styles.passwordWrapper}>
+            <input
+              type={isShownPassword == false ? "password" : "text"}
+              ref={passwordInput}
+              className={styles.input}
+              placeholder="Password"
+            />
+            <span onClick={togglePassword} className={isShownPassword === true ? styles.shownPassword : undefined}>
+              <AiFillEye size="14" />
+            </span>
+          </div>
+
+          {currentMode === Mode.sign_in && (
+            <div className={styles.buttonsWrapper}>
+              <button onClick={signin}>
+                <PiSignInBold />
+                <span>Login</span>
+              </button>
+              <button onClick={() => setCurrentMode(Mode.sign_up)}>Switch To Signup</button>
+            </div>
+          )}
+
+          {currentMode === Mode.sign_up && (
+            <div className={styles.buttonsWrapper}>
+              <button onClick={signup}>
+                <AiOutlineUserAdd />
+                <span>Register</span>
+              </button>
+              <button onClick={() => setCurrentMode(Mode.sign_in)}>Switch To Signin</button>
+            </div>
+          )}
         </div>
-
-        {currentMode === Mode.sign_in && (
-          <div className={styles.buttonsWrapper}>
-            <button onClick={signin}>
-              <PiSignInBold />
-              <span>Login</span>
-            </button>
-            <button onClick={() => setCurrentMode(Mode.sign_up)}>Switch To Signup</button>
-          </div>
-        )}
-
-        {currentMode === Mode.sign_up && (
-          <div className={styles.buttonsWrapper}>
-            <button onClick={signup}>
-              <AiOutlineUserAdd />
-              <span>Register</span>
-            </button>
-            <button onClick={() => setCurrentMode(Mode.sign_in)}>Switch To Signin</button>
-          </div>
-        )}
       </div>
     </div>
   );

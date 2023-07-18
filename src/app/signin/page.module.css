@@ -1,15 +1,19 @@
+#center {
+  min-height: calc(100vh - 52px - 26px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #wrapperToWrapperSignIn {
   background: #e4e4e4;
-  /* background: linear-gradient(0deg, rgba(52, 52, 52, 1) 0%, rgba(61, 61, 61, 1) 35%, rgba(52, 52, 52, 1) 100%); */
   width: 100%;
   padding: 15px;
 }
 #wrapperSignIn {
-  /* background: #404040; */
   width: 400px;
   margin: 0 auto;
   text-align: center;
-  /* box-shadow: 0px 0px 2px 0px #c1c1c1; */
   box-shadow: 0 0 5px 1px grey;
 }
 

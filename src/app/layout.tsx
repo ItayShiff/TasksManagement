@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/header";
+import Header from "@/components/ClientComponents/header";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { useContext, useMemo, useState } from "react";
