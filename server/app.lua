@@ -42,7 +42,7 @@ app:put("/task/:id", json_params(function(self)
     return { json = { message = "Not authenticated"}, status = 401 }
   end
 
-  local task_to_be_updated = db.GetSpecificTask(self.params.id, utils.DONT_DO_JSON)
+  local task_to_be_updated = db.GetSpecificTask(self.params.id)
   
   -- Make sure the task exists before we update it, if it's length is 0 so it doesn't exist
   local doesThisTaskNotExist = #task_to_be_updated == 0

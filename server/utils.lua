@@ -9,8 +9,4 @@ function utils.OptionalChaining(value_1, value_2)
     return value_2
 end
 
--- For modularity with generics
-utils.MAKE_JSON = false
-utils.DONT_DO_JSON = true
-
 return utils

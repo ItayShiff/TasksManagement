@@ -92,7 +92,7 @@ end
 
 function db.isUsernameTaken(username)
   local query = string.format("SELECT * FROM Users where id='%s'", username)
-  local res = QueryUsers(query, utils.DONT_DO_JSON)
+  local res = QueryUsers(query)
   -- If there is such user
   if #res ~= 0 then
     return true
@@ -104,7 +104,7 @@ end
 
 function db.isUserDataValid(username, password)
   local query = string.format("SELECT * FROM Users where id='%s' and password='%s'", username, password)
-  local res = QueryUsers(query, utils.DONT_DO_JSON)
+  local res = QueryUsers(query)
   -- If there is such user
   if #res == 1 then
     return true
