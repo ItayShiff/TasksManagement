@@ -10,9 +10,10 @@ import { UserUseState } from "@/components/User/User";
 
 type Props = {
   setIsOpenedNewTaskModal: React.Dispatch<React.SetStateAction<boolean>>;
+  updateAllTasks: () => void;
 };
 
-const NewTaskModal = ({ setIsOpenedNewTaskModal }: Props) => {
+const NewTaskModal = ({ setIsOpenedNewTaskModal, updateAllTasks }: Props) => {
   const isCompleted = useRef<boolean>(false);
   const titleInput = useRef<HTMLInputElement>(null);
   const descriptionInput = useRef<HTMLInputElement>(null);
@@ -40,6 +41,7 @@ const NewTaskModal = ({ setIsOpenedNewTaskModal }: Props) => {
       token: user.token,
     };
 
+    updateAllTasks(); // If the user was during filter of only other User for example and then he decided to add a new task, so revert back to all tasks, then add the new
     tasksStore.createTask(taskToBeCreated);
     setIsOpenedNewTaskModal(false);
   };
@@ -70,4 +72,4 @@ const NewTaskModal = ({ setIsOpenedNewTaskModal }: Props) => {
   );
 };
 
-export default NewTaskModal;
+export default React.memo(NewTaskModal);

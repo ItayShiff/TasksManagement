@@ -48,7 +48,9 @@ const FuncRelatedToTasks = (props: Props) => {
 
   return (
     <div>
-      {isOpenedNewTaskModal && <NewTaskModal setIsOpenedNewTaskModal={setIsOpenedNewTaskModal} />}
+      {isOpenedNewTaskModal && (
+        <NewTaskModal setIsOpenedNewTaskModal={setIsOpenedNewTaskModal} updateAllTasks={updateAllTasks} />
+      )}
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
         <button onClick={openCreateNewTaskModal}>Create New Task</button>

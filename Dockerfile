@@ -71,7 +71,4 @@ ENTRYPOINT ["sh", "/tmp/loadDatabase.sh"]
 
 WORKDIR /app
 COPY . .
-RUN npm install -g yarn && yarn
-# RUN npm install
-# RUN npm run build
-# CMD ["npm", "run", "dev"]
+RUN npm install -g yarn && npm install

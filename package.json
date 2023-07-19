@@ -1,14 +1,14 @@
 {
-  "name": "Tasks Management",
+  "name": "TasksManagement",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "npx next dev & cd server; lapis server",
-    "dev-server": "cd server; lapis server",
+    "server": "cd server; lapis server",
     "dev-client": "npx next dev",
     "dev-edits": "npx next dev & cd server; while inotifywait -r -e modify .; do lapis server stop && lapis server; done",
     "build": "next build",
-    "start-client": "next start",
+    "prod-client": "next start",
     "start": "npx next start & cd server; lapis server",
     "lint": "next lint"
   },
