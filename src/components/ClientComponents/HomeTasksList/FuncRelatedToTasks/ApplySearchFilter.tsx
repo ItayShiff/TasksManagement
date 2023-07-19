@@ -14,6 +14,11 @@ const ApplySearchFilter = ({ filterByOptions }: Props) => {
   const didApplyFilterAlready = useRef<boolean>(false); // To avoid calling GetAllTasks() every time the user switches to option No Filter
 
   const applyFilter = () => {
+    if (currentSearchFilter === filterByOptions[FilterBy.No_Filter]) {
+      toast.error("You need to set a filter prior to search");
+      return;
+    }
+
     const value = searchInput.current?.value && searchInput.current.value.trim();
     if (value && value !== "") {
       didApplyFilterAlready.current = true;

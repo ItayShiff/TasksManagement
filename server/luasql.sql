@@ -15,7 +15,9 @@ CREATE TABLE Tasks (
 );
 
 INSERT INTO Users 
-VALUES ("itay", "123456");
+VALUES ("itay", "123456"), ("dan", "123456");
 
 INSERT INTO Tasks 
-VALUES ("itay", "1", "MyTaskTitle", "MyTaskDescrption", false);
+VALUES ("itay", "1", "Health and Fitness", "Jog three times this week", false),
+("dan", "2", "Fitness", "Go to the gym this week", false),
+("itay", "3", "Personal Development", "Read last chapter of The Lord of the Rings", true);

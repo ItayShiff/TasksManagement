@@ -18,7 +18,6 @@ const GetAllTasks = cache(async (): Promise<Task[]> => {
     const { data } = await axios.get(`${process.env.API}/tasks`);
     return data;
   } catch (error) {
-    console.log("gone error", error);
     return []; // An error retrieving all tasks
   }
 });

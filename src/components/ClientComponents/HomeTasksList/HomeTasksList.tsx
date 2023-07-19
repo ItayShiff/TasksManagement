@@ -31,9 +31,6 @@ const HomeTasksList = ({ Tasks }: Props) => {
     tasksStore.tasksArr = Tasks;
   }, []);
 
-  // console.log("This is my tasks", Tasks);
-  // console.log(tasksStore.tasksArr);
-
   const editTask = (task_index: number) => {
     tasksStore.editTask(task_index);
   };
@@ -71,56 +68,60 @@ const HomeTasksList = ({ Tasks }: Props) => {
     });
   };
 
-  // console.log(tasksStore.currentlyEditingTasksSorted);
-
   return (
     <div id={styles.wrapperTasks}>
       <FuncRelatedToTasks />
 
       <div id={styles.titleGuide}> You are able to create/update/remove only the tasks you created</div>
 
-      {tasksStore.tasksArr.map((task: Task, index: number) => (
-        <div key={task.id} className={styles.task}>
-          <div data-owner={task.user_id} data-task_id={task.id} className={styles.info}>
-            <BsInfoCircleFill />
-          </div>
-          <Checkbox
-            isCompleted={task.completed == CompletedOptions.TRUE}
-            amITheOwner={task.user_id === user?.username}
-            isTickedFromModal={tasksStore.currentlyEditingTaskIndex === index ? isCompleted : undefined}
-          />
-          <div className={`${styles.titleAndDescription} ${styles.titleAndDescriptionNames}`}>
-            <div>Title:</div>
-            <div>Description:</div>
-          </div>
+      {tasksStore.tasksArr.length === 0 ? (
+        <div id={styles.noResultsFound}>No Results Found</div>
+      ) : (
+        <React.Fragment>
+          {tasksStore.tasksArr.map((task: Task, index: number) => (
+            <div key={task.id} className={styles.task}>
+              <div data-owner={task.user_id} data-task_id={task.id} className={styles.info}>
+                <BsInfoCircleFill />
+              </div>
+              <Checkbox
+                isCompleted={task.completed == CompletedOptions.TRUE}
+                amITheOwner={task.user_id === user?.username}
+                isTickedFromModal={tasksStore.currentlyEditingTaskIndex === index ? isCompleted : undefined}
+              />
+              <div className={`${styles.titleAndDescription} ${styles.titleAndDescriptionNames}`}>
+                <div>Title:</div>
+                <div>Description:</div>
+              </div>
 
-          {tasksStore.currentlyEditingTaskIndex !== index ? (
-            <div className={styles.titleAndDescription}>
-              <div>{task.title}</div>
-              <div>{task.description}</div>
-            </div>
-          ) : (
-            <div className={styles.titleAndDescription}>
-              <input defaultValue={task.title} ref={titleInput} className={styles.inputEdit} />
-              <input defaultValue={task.description} ref={descriptionInput} className={styles.inputEdit} />
-            </div>
-          )}
-
-          {task.user_id === user?.username && (
-            <div>
               {tasksStore.currentlyEditingTaskIndex !== index ? (
-                <button onClick={() => editTask(index)}>Edit</button>
+                <div className={styles.titleAndDescription}>
+                  <div>{task.title}</div>
+                  <div>{task.description}</div>
+                </div>
               ) : (
-                <React.Fragment>
-                  <button onClick={() => discardEditTask()}>Discard Edit</button>
-                  <button onClick={() => saveEditedTask(task.id, index)}>Save Edit</button>
-                </React.Fragment>
+                <div className={styles.titleAndDescription}>
+                  <input defaultValue={task.title} ref={titleInput} className={styles.inputEdit} />
+                  <input defaultValue={task.description} ref={descriptionInput} className={styles.inputEdit} />
+                </div>
               )}
-              <button onClick={() => deleteTask(task.id)}>Remove</button>
+
+              {task.user_id === user?.username && (
+                <div>
+                  {tasksStore.currentlyEditingTaskIndex !== index ? (
+                    <button onClick={() => editTask(index)}>Edit</button>
+                  ) : (
+                    <React.Fragment>
+                      <button onClick={() => discardEditTask()}>Discard Edit</button>
+                      <button onClick={() => saveEditedTask(task.id, index)}>Save Edit</button>
+                    </React.Fragment>
+                  )}
+                  <button onClick={() => deleteTask(task.id)}>Remove</button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+          ))}
+        </React.Fragment>
+      )}
     </div>
   );
 };

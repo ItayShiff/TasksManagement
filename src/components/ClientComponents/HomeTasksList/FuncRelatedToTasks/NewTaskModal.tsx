@@ -41,7 +41,6 @@ const NewTaskModal = ({ setIsOpenedNewTaskModal }: Props) => {
     };
 
     tasksStore.createTask(taskToBeCreated);
-    toast.success("Succesfully added a new task");
     setIsOpenedNewTaskModal(false);
   };
 

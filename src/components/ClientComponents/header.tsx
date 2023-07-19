@@ -8,6 +8,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { UserUseState } from "../User/User";
 import UserContext from "../context/UserContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type Props = {};
 const svgSize = 14;
@@ -30,7 +31,7 @@ const Header = (props: Props) => {
         token: token,
       });
     } catch (err: any) {
-      console.log("Token is invalid / user is not authenticated");
+      toast.error("Token is invalid / user is not authenticated");
     }
   };
 

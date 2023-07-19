@@ -24,8 +24,6 @@ class TasksStore {
     let counter = 0;
     for (let task of this.tasksArr) {
       if (Number(task.completed)) {
-        // console.log("Okay cmpleted??", task.completed);
-
         counter++;
       }
     }

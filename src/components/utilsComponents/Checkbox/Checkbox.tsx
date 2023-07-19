@@ -14,8 +14,6 @@ const Checkbox = ({ isCompleted, amITheOwner, isTickedFromModal }: Props) => {
   const isBeingEdited = isTickedFromModal !== undefined && isTickedFromModal.current !== undefined;
   const shouldDisableCheckbox = !isBeingEdited ?? amITheOwner === false; // If isBeingEdited so shouldDisableCheckbox = false, if !isBeingEdited so shouldDisableCheckbox = true, but if it's not mine so disable it only if i'm not the owner
 
-  console.log(isBeingEdited);
-
   // For making sure isTickedFromModal is pointing to the right value of checkbox
   useEffect(() => {
     if (isBeingEdited) {
