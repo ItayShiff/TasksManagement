@@ -1,0 +1,59 @@
+#wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000b0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+#contentModal {
+  background: #fefefe;
+  width: 80%;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+#closeModalButton {
+  position: absolute;
+  right: 0;
+  border: 0;
+  font-weight: bold;
+}
+
+#contentModalFlex {
+  display: flex;
+  align-items: stretch;
+  margin-right: 15px;
+}
+
+#titleCreateNewTask {
+  text-align: center;
+  background: #f3f3f3;
+  padding: 9px;
+  margin-bottom: 13px;
+}
+#isCompletedContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+#containerInputs {
+  margin: 0px 20px;
+  flex: 1;
+}
+
+#containerInputs input {
+  display: block;
+  width: 100%;
+}
+#containerInputs input:first-child {
+  margin-bottom: 15px;
+}

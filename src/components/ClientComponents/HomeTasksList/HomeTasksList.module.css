@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   border-bottom: 1px solid grey;
+  padding: 8px 0px;
 }
 
 .task:last-child {
@@ -30,10 +31,4 @@
 
 .task div button:first-of-type {
   margin: 0px 10px;
-}
-
-#firstLineContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
 }

@@ -17,6 +17,7 @@ type TaskArray = Task[] & {
 
 class TasksStore {
   tasksArr: TaskArray = [] as TaskArray;
+  currentlyEditingTasks = new Set<number>(); // Will hold id of indices of tasks which the user is editing right now
 
   get numberOfCompletedTasks(): number {
     let counter = 0;
@@ -27,6 +28,15 @@ class TasksStore {
     }
 
     return counter;
+  }
+
+  get currentlyEditingTasksSorted(): boolean[] {
+    let res = Array(this.tasksArr.length).fill(false);
+    this.currentlyEditingTasks.forEach((taskToEdit) => {
+      res[taskToEdit] = true;
+    });
+
+    return res;
   }
 
   get numberOfCompletedTasksPerUser(): { [key: string]: number } {
@@ -60,7 +70,9 @@ class TasksStore {
     this.tasksArr.push(newTask);
   }
 
-  editTask() {}
+  editTask(todo_index: number) {
+    this.currentlyEditingTasks.add(todo_index);
+  }
 
   deleteTask(task_id_with_token: { id: string; token: string }) {
     const bodyToSend = { token: task_id_with_token.token };

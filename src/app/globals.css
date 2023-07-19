@@ -12,7 +12,8 @@ button {
   color: #141414;
 }
 
-h1 {
+h1,
+ul {
   margin: 0;
 }
 
