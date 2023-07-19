@@ -57,5 +57,6 @@ interface Task {
 }
 
 export type TaskToBeCreated = Omit<Task, "user_id"> & { userId: string; token: string };
+export type TaskToBeEdited = Omit<Task, "id"> & { token: string };
 
 export default Task;

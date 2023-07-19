@@ -49,6 +49,14 @@ header {
   height: 52px;
 }
 
+#credit {
+  position: absolute;
+  top: 53px;
+  padding: 7px;
+  background: #dedede;
+  border-bottom-right-radius: 10px;
+}
+
 /* min-height: calc(100vh - 52px - 26px); -26px because it's half of header, for symmetry */
 /* main {
   display: flex;
@@ -89,4 +97,10 @@ header a:hover {
 button {
   border: 1px solid grey;
   padding: 10px;
+  border-radius: 10px;
+  transition: background 200ms;
+}
+
+button:hover {
+  background: #d0d0d0;
 }

@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import Task, { TaskToBeCreated } from "./task";
+import Task, { CompletedOptions, TaskToBeCreated, TaskToBeEdited } from "./task";
 import { makeAutoObservable, observable, computed, action, runInAction } from "mobx";
+import { toast } from "react-toastify";
 
 enum Method {
   GET,
@@ -9,20 +10,22 @@ enum Method {
   PUT,
 }
 
-// This is made to allow the functionality of ObservableArrayAdministration because we want to utilize the replace method to change observable array data,
-// There isn't ObservableArrayAdministration<Task> so this is so the solution I came up with
+// This is made to allow the functionality of ObservableArrayAdministration with typescript because we want to utilize the replace method to change observable array data,
+// There isn't ObservableArrayAdministration<Task> so this is the way to achieve it
 type TaskArray = Task[] & {
   replace?: (value: Task[]) => void;
 };
 
 class TasksStore {
   tasksArr: TaskArray = [] as TaskArray;
-  currentlyEditingTasks = new Set<number>(); // Will hold id of indices of tasks which the user is editing right now
+  currentlyEditingTaskIndex: number | null = null; // Will hold index of task currently editing
 
   get numberOfCompletedTasks(): number {
     let counter = 0;
     for (let task of this.tasksArr) {
-      if (task.completed) {
+      if (Number(task.completed)) {
+        // console.log("Okay cmpleted??", task.completed);
+
         counter++;
       }
     }
@@ -30,16 +33,7 @@ class TasksStore {
     return counter;
   }
 
-  get currentlyEditingTasksSorted(): boolean[] {
-    let res = Array(this.tasksArr.length).fill(false);
-    this.currentlyEditingTasks.forEach((taskToEdit) => {
-      res[taskToEdit] = true;
-    });
-
-    return res;
-  }
-
-  get numberOfCompletedTasksPerUser(): { [key: string]: number } {
+  get numberOfTasksPerUser(): { [key: string]: number } {
     const res: { [key: string]: number } = {};
 
     for (let task of this.tasksArr) {
@@ -57,29 +51,55 @@ class TasksStore {
     makeAutoObservable(this);
   }
 
-  createTask(task: TaskToBeCreated) {
-    this.genericAPIRequest(Method.POST, `${process.env.API}/task`, task);
-    const newTask: Task = {
-      id: task.id,
-      user_id: task.userId,
-      title: task.title,
-      description: task.description,
-      completed: task.completed,
-    };
+  async createTask(task: TaskToBeCreated) {
+    const isSuccessRequest = await this.genericAPIRequest(Method.POST, `${process.env.API}/task`, task);
 
-    this.tasksArr.push(newTask);
+    if (isSuccessRequest === true) {
+      const newTask: Task = {
+        id: task.id,
+        user_id: task.userId,
+        title: task.title,
+        description: task.description,
+        completed: task.completed,
+      };
+
+      this.tasksArr.push(newTask);
+      toast.success("Successfully created a new task");
+    }
   }
 
   editTask(todo_index: number) {
-    this.currentlyEditingTasks.add(todo_index);
+    this.currentlyEditingTaskIndex = todo_index;
   }
 
-  deleteTask(task_id_with_token: { id: string; token: string }) {
-    const bodyToSend = { token: task_id_with_token.token };
-    this.genericAPIRequest(Method.DELETE, `${process.env.API}/task/${task_id_with_token.id}`, bodyToSend);
+  discardEditTask() {
+    this.currentlyEditingTaskIndex = null;
+  }
 
-    const updatedTasksArr = this.tasksArr.filter((currTask) => currTask.id !== task_id_with_token.id);
-    this.tasksArr.replace!(updatedTasksArr);
+  async saveEditedTask(task_id: string, editedTask: TaskToBeEdited, task_index: number) {
+    const isSuccessRequest = await this.genericAPIRequest(Method.PUT, `${process.env.API}/task/${task_id}`, editedTask);
+
+    if (isSuccessRequest === true) {
+      this.tasksArr[task_index].title = editedTask.title;
+      this.tasksArr[task_index].description = editedTask.description;
+      this.tasksArr[task_index].completed = editedTask.completed;
+      toast.success("Successfully edited task");
+    }
+  }
+
+  async deleteTask(task_id_with_token: { id: string; token: string }) {
+    const bodyToSend = { token: task_id_with_token.token };
+    const isSuccessRequest = await this.genericAPIRequest(
+      Method.DELETE,
+      `${process.env.API}/task/${task_id_with_token.id}`,
+      bodyToSend
+    );
+
+    if (isSuccessRequest === true) {
+      const updatedTasksArr = this.tasksArr.filter((currTask) => currTask.id !== task_id_with_token.id);
+      this.tasksArr.replace!(updatedTasksArr);
+      toast.success("Successfully deleted task");
+    }
   }
 
   filterTasksByTaskID(task_id: string) {
@@ -94,7 +114,7 @@ class TasksStore {
     this.genericAPIRequest(Method.GET, `${process.env.API}/tasks`);
   }
 
-  private genericAPIRequest = (method: Method, api: string, body?: any) => {
+  private genericAPIRequest = (method: Method, api: string, body?: any): Promise<boolean> => {
     let nextCall: Promise<AxiosResponse<any, any>>;
     switch (method) {
       case Method.GET:
@@ -114,26 +134,39 @@ class TasksStore {
         break;
     }
 
-    this.executeGenericAPIRequest(nextCall);
+    return this.executeGenericAPIRequest(nextCall);
   };
 
-  private async executeGenericAPIRequest(APICall: Promise<AxiosResponse<any, any>>) {
+  private async executeGenericAPIRequest(APICall: Promise<AxiosResponse<any, any>>): Promise<boolean> {
     let res: TaskArray;
+    let isSuccessRequest: boolean = false;
     try {
       const { data } = await APICall;
-      res = data;
+
+      if (Array.isArray(data)) {
+        res = data;
+      } else if (data && Object.keys(data).length === 0) {
+        res = [];
+      }
+      isSuccessRequest = true;
     } catch (err: any) {
-      console.log(err.message);
-      res = [];
-      console.log("WHAAAAAAAAAAAAAAAAAAAT why here??", err);
+      if (err?.response?.data?.message) {
+        toast.error(err.response.data.message);
+      }
+
+      isSuccessRequest = false;
     }
 
     try {
       runInAction(() => {
-        // This is equal to doing - this.tasksArr = data , doing it with "replace" because it's observableArray of MobX
-        this.tasksArr.replace!(res);
+        if (Array.isArray(res)) {
+          this.tasksArr.replace!(res); // This is equal to doing - this.tasksArr = data , doing it with "replace" because it's observableArray of MobX
+        }
+        this.currentlyEditingTaskIndex = null; // Resetting
       });
     } catch (err: any) {}
+
+    return isSuccessRequest;
   }
 
   *flow() {

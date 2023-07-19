@@ -9,6 +9,13 @@
   border-bottom: 0;
 }
 
+#titleGuide {
+  margin-bottom: 5px;
+  text-align: center;
+  padding: 10px;
+  background: #e9e9e9;
+}
+
 #wrapperTasks {
   width: 98%;
   margin: 0 auto;
@@ -17,8 +24,13 @@
 .task div {
   margin: 0px 10px;
 }
+
 .titleAndDescription {
   flex: 1;
+}
+.titleAndDescription input {
+  display: block;
+  width: 100%;
 }
 .titleAndDescription div:first-child {
   font-weight: bold;
@@ -29,6 +41,43 @@
   text-decoration: underline;
 }
 
-.task div button:first-of-type {
-  margin: 0px 10px;
+.task div button {
+  margin-right: 10px;
+}
+
+.task div button:last-child {
+  margin: 0;
+}
+
+.inputEdit {
+  border: 1px solid grey;
+  background: white;
+}
+
+.info {
+  margin-right: 15px !important;
+  position: relative;
+}
+
+.info:hover::before {
+  content: "\21AA";
+  z-index: 2;
+  font-size: 23px;
+  position: absolute;
+  left: 4px;
+  font-weight: bold;
+  top: 4px;
+}
+
+.info:hover::after {
+  position: absolute;
+  top: -16px;
+  left: 26px;
+  content: "𝗢𝘄𝗻𝗲𝗿:  " attr(data-owner) "\A𝗧𝗮𝘀𝗸 𝗜𝗗: " attr(data-task_id);
+  z-index: 1;
+  white-space: pre;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  border: 1px solid grey;
 }

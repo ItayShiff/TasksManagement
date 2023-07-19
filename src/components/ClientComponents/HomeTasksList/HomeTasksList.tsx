@@ -2,15 +2,15 @@
 "use client";
 
 import styles from "./HomeTasksList.module.css";
-import Task, { CompletedOptions } from "../../Task/task";
-import React, { useContext, useLayoutEffect } from "react";
+import Task, { CompletedOptions, TaskToBeEdited } from "../../Task/task";
+import React, { useContext, useLayoutEffect, useRef } from "react";
+import { BsInfoCircleFill } from "react-icons/bs";
 import tasksStore from "../../Task/tasks-store";
-
 import { observer } from "mobx-react";
 import Checkbox from "../../utilsComponents/Checkbox/Checkbox";
 import UserContext from "../../context/UserContext";
-import { UserUseState } from "../../User/User";
 import { toast } from "react-toastify";
+import { UserUseState } from "../../User/User";
 import FuncRelatedToTasks from "./FuncRelatedToTasks/FuncRelatedToTasks";
 
 type Props = {
@@ -21,19 +21,43 @@ const HomeTasksList = ({ Tasks }: Props) => {
   const userUseStateData: UserUseState = useContext(UserContext);
   const { user } = userUseStateData;
 
+  // This 3 useRefs will reassign to the correct value refs, when clicked Edit
+  const titleInput = useRef<HTMLInputElement>(null);
+  const descriptionInput = useRef<HTMLInputElement>(null);
+  const isCompleted = useRef<boolean>(false);
+
   // For initializating the tasks in store, Tasks generated from server component
   useLayoutEffect(() => {
     tasksStore.tasksArr = Tasks;
   }, []);
 
-  console.log("This is my tasks", Tasks);
+  // console.log("This is my tasks", Tasks);
   // console.log(tasksStore.tasksArr);
 
-  const editTask = (todo_index: number) => {
-    tasksStore.editTask(todo_index);
+  const editTask = (task_index: number) => {
+    tasksStore.editTask(task_index);
   };
 
-  console.log(tasksStore.currentlyEditingTasks);
+  const discardEditTask = () => {
+    tasksStore.discardEditTask();
+  };
+
+  const saveEditedTask = (task_id: string, task_index: number) => {
+    if (!user) {
+      toast.error("No permission, only registered users can create tasks");
+      return;
+    }
+
+    const taskToBeEdited: TaskToBeEdited = {
+      user_id: user.username,
+      title: titleInput.current!.value,
+      description: descriptionInput.current!.value,
+      completed: Number(isCompleted.current), // MySql saves bool as 1 or 0
+      token: user.token,
+    };
+
+    tasksStore.saveEditedTask(task_id, taskToBeEdited, task_index);
+  };
 
   const deleteTask = (task_id: string) => {
     if (user === null) {
@@ -47,32 +71,52 @@ const HomeTasksList = ({ Tasks }: Props) => {
     });
   };
 
-  console.log(tasksStore.currentlyEditingTasksSorted);
+  // console.log(tasksStore.currentlyEditingTasksSorted);
 
   return (
     <div id={styles.wrapperTasks}>
       <FuncRelatedToTasks />
 
-      {tasksStore.currentlyEditingTasksSorted.map((str: boolean, index: number) => (
-        <div key={index}>{str ? "YAY" : "NAY"}</div>
-      ))}
+      <div id={styles.titleGuide}> You are able to create/update/remove only the tasks you created</div>
 
-      {tasksStore.tasksArr.map((todo: Task, index: number) => (
-        <div key={todo.id} className={styles.task}>
-          <Checkbox isCompleted={todo.completed == CompletedOptions.TRUE} amITheOwner={todo.user_id === user?.username} />
+      {tasksStore.tasksArr.map((task: Task, index: number) => (
+        <div key={task.id} className={styles.task}>
+          <div data-owner={task.user_id} data-task_id={task.id} className={styles.info}>
+            <BsInfoCircleFill />
+          </div>
+          <Checkbox
+            isCompleted={task.completed == CompletedOptions.TRUE}
+            amITheOwner={task.user_id === user?.username}
+            isTickedFromModal={tasksStore.currentlyEditingTaskIndex === index ? isCompleted : undefined}
+          />
           <div className={`${styles.titleAndDescription} ${styles.titleAndDescriptionNames}`}>
             <div>Title:</div>
             <div>Description:</div>
           </div>
-          <div className={styles.titleAndDescription}>
-            <div>{todo.title}</div>
-            <div>{todo.description}</div>
-          </div>
 
-          {todo.user_id === user?.username && (
+          {tasksStore.currentlyEditingTaskIndex !== index ? (
+            <div className={styles.titleAndDescription}>
+              <div>{task.title}</div>
+              <div>{task.description}</div>
+            </div>
+          ) : (
+            <div className={styles.titleAndDescription}>
+              <input defaultValue={task.title} ref={titleInput} className={styles.inputEdit} />
+              <input defaultValue={task.description} ref={descriptionInput} className={styles.inputEdit} />
+            </div>
+          )}
+
+          {task.user_id === user?.username && (
             <div>
-              <button onClick={() => editTask(index)}>Edit</button>
-              <button onClick={() => deleteTask(todo.id)}>Remove</button>
+              {tasksStore.currentlyEditingTaskIndex !== index ? (
+                <button onClick={() => editTask(index)}>Edit</button>
+              ) : (
+                <React.Fragment>
+                  <button onClick={() => discardEditTask()}>Discard Edit</button>
+                  <button onClick={() => saveEditedTask(task.id, index)}>Save Edit</button>
+                </React.Fragment>
+              )}
+              <button onClick={() => deleteTask(task.id)}>Remove</button>
             </div>
           )}
         </div>

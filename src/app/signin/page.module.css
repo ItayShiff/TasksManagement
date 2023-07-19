@@ -42,19 +42,15 @@
 
 .buttonsWrapper button {
   width: 50%;
+  border-radius: 0;
   padding: 10px;
   font-size: 16px;
-  transition: background 200ms;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 .buttonsWrapper button span {
   margin-left: 5px;
-}
-
-.buttonsWrapper button:hover {
-  background: #d0d0d0;
 }
 
 #signInTitle,

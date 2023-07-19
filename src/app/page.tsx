@@ -5,6 +5,13 @@ import HomeTasksList from "@/components/ClientComponents/HomeTasksList/HomeTasks
 import axios from "axios";
 import { cache } from "react";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Task Management Homepage",
+  description: "A site that allows you to manage your tasks",
+};
+
 // For server side rendering
 const GetAllTasks = cache(async (): Promise<Task[]> => {
   try {
@@ -12,7 +19,6 @@ const GetAllTasks = cache(async (): Promise<Task[]> => {
     return data;
   } catch (error) {
     console.log("gone error", error);
-
     return []; // An error retrieving all tasks
   }
 });
@@ -22,7 +28,7 @@ export default async function HomeServerComponent() {
 
   return (
     <div>
-      <h1 id={styles.title}>Todo App</h1>
+      <h1 id={styles.title}>Task Management</h1>
       <HomeTasksList Tasks={Tasks} />
     </div>
   );

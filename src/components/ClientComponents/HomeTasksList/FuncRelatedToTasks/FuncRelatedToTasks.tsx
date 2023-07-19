@@ -43,31 +43,30 @@ const FuncRelatedToTasks = (props: Props) => {
     tasksStore.getAllTasks();
   };
 
-  // console.log(tasksStore.numberOfCompletedTasksPerUser);
+  // console.log(tasksStore.numberOfTasksPerUser);
 
   return (
     <div>
       {isOpenedNewTaskModal && <NewTaskModal setIsOpenedNewTaskModal={setIsOpenedNewTaskModal} />}
 
-      <details id={styles.details}>
-        <summary>Some Statistics Regarding Tasks</summary>
-        <div>
-          <u>Number of completed tasks:</u> {tasksStore.numberOfCompletedTasks}
-        </div>
-        <div>
-          <u>Users and how many tasks they completed:</u>
-        </div>
-        <ul>
-          {Object.keys(tasksStore.numberOfCompletedTasksPerUser).map((currUser: string, index: number) => (
-            <li key={currUser + index}>
-              {currUser}: {tasksStore.numberOfCompletedTasksPerUser[currUser]}
-            </li>
-          ))}
-        </ul>
-      </details>
-
       <div id={styles.firstLineContainer}>
         <button onClick={openCreateNewTaskModal}>Create New Task</button>
+        <details id={styles.details}>
+          <summary>Some Statistics Regarding Tasks</summary>
+          <div>
+            <u>Number of completed tasks:</u> {tasksStore.numberOfCompletedTasks}
+          </div>
+          <div>
+            <u>Users and how many tasks they own:</u>
+          </div>
+          <ul>
+            {Object.keys(tasksStore.numberOfTasksPerUser).map((currUser: string, index: number) => (
+              <li key={currUser + index}>
+                {currUser}: {tasksStore.numberOfTasksPerUser[currUser]}
+              </li>
+            ))}
+          </ul>
+        </details>
         <GenericDebounceButton timeToWaitInMS={7000} text={"Update All Tasks"} func={updateAllTasks} />
       </div>
 

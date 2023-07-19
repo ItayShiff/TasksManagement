@@ -50,30 +50,33 @@ const Header = (props: Props) => {
   }, []);
 
   return (
-    <header>
-      {user !== null ? (
-        <React.Fragment>
-          <div>
-            <span>Connected: </span>
-            <FaUserAlt size={svgSize} color={colorSvg} />
-            <span>{user.username}</span>
-          </div>
-          <div id="signout" onClick={SignOut}>
+    <React.Fragment>
+      <header>
+        {user !== null ? (
+          <React.Fragment>
+            <div>
+              <span>Connected: </span>
+              <FaUserAlt size={svgSize} color={colorSvg} />
+              <span>{user.username}</span>
+            </div>
+            <div id="signout" onClick={SignOut}>
+              <PiSignInBold size={svgSize} color={colorSvg} />
+              <span>Sign Out</span>
+            </div>
+          </React.Fragment>
+        ) : (
+          <Link href="/signin">
             <PiSignInBold size={svgSize} color={colorSvg} />
-            <span>Sign Out</span>
-          </div>
-        </React.Fragment>
-      ) : (
-        <Link href="/signin">
-          <PiSignInBold size={svgSize} color={colorSvg} />
-          <span>Sign In</span>
+            <span>Sign In</span>
+          </Link>
+        )}
+        <Link href="/">
+          <ImHome3 size={svgSize} color={colorSvg} />
+          <span>Homepage</span>
         </Link>
-      )}
-      <Link href="/">
-        <ImHome3 size={svgSize} color={colorSvg} />
-        <span>Homepage</span>
-      </Link>
-    </header>
+      </header>
+      <div id="credit">© Itay Shiff</div>
+    </React.Fragment>
   );
 };
 
