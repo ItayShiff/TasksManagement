@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import styles from "./HomeTasksList.module.css";
 import Task, { CompletedOptions, TaskToBeEdited } from "../../Task/task";
-import React, { useContext, useLayoutEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { BsInfoCircleFill } from "react-icons/bs";
 import tasksStore from "../../Task/tasks-store";
 import { observer } from "mobx-react";
@@ -13,11 +12,9 @@ import { toast } from "react-toastify";
 import { UserUseState } from "../../User/User";
 import FuncRelatedToTasks from "./FuncRelatedToTasks/FuncRelatedToTasks";
 
-type Props = {
-  Tasks: Task[];
-};
+type Props = {};
 
-const HomeTasksList = ({ Tasks }: Props) => {
+const HomeTasksList = (props: Props) => {
   const userUseStateData: UserUseState = useContext(UserContext);
   const { user } = userUseStateData;
 
@@ -26,12 +23,12 @@ const HomeTasksList = ({ Tasks }: Props) => {
   const descriptionInput = useRef<HTMLInputElement>(null);
   const isCompleted = useRef<boolean>(false);
 
-  // For initializating the tasks in store, Tasks generated from server component
-  useLayoutEffect(() => {
-    tasksStore.tasksArr = Tasks;
-  }, []);
-
   const editTask = (task_index: number) => {
+    if (!user) {
+      toast.error("No permission, only registered users can edit tasks");
+      return;
+    }
+
     tasksStore.editTask(task_index);
   };
 
@@ -41,7 +38,7 @@ const HomeTasksList = ({ Tasks }: Props) => {
 
   const saveEditedTask = (task_id: string, task_index: number) => {
     if (!user) {
-      toast.error("No permission, only registered users can create tasks");
+      toast.error("No permission, only registered users can edit tasks");
       return;
     }
 
@@ -69,9 +66,8 @@ const HomeTasksList = ({ Tasks }: Props) => {
   };
 
   return (
-    <div id={styles.wrapperTasks}>
+    <React.Fragment>
       <FuncRelatedToTasks />
-
       <div id={styles.titleGuide}> You are able to create/update/remove only the tasks you created</div>
 
       {tasksStore.tasksArr.length === 0 ? (
@@ -122,7 +118,7 @@ const HomeTasksList = ({ Tasks }: Props) => {
           ))}
         </React.Fragment>
       )}
-    </div>
+    </React.Fragment>
   );
 };
 

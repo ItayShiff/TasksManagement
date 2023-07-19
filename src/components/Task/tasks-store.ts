@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import Task, { CompletedOptions, TaskToBeCreated, TaskToBeEdited } from "./task";
-import { makeAutoObservable, observable, computed, action, runInAction } from "mobx";
+import Task, { TaskToBeCreated, TaskToBeEdited } from "./task";
+import { makeAutoObservable, runInAction } from "mobx";
 import { toast } from "react-toastify";
 
 enum Method {
@@ -10,16 +10,17 @@ enum Method {
   PUT,
 }
 
-// This is made to allow the functionality of ObservableArrayAdministration with typescript because we want to utilize the replace method to change observable array data,
+// This is made to allow the functionality of ObservableArrayAdministration (which MobX uses) with typescript because we want to utilize the replace method to change observable array data,
 // There isn't ObservableArrayAdministration<Task> so this is the way to achieve it
 type TaskArray = Task[] & {
   replace?: (value: Task[]) => void;
 };
 
 class TasksStore {
-  tasksArr: TaskArray = [] as TaskArray;
-  currentlyEditingTaskIndex: number | null = null; // Will hold index of task currently editing
+  tasksArr: TaskArray = [] as TaskArray; // Observable
+  currentlyEditingTaskIndex: number | null = null; // Observable, Will hold index of task currently editing
 
+  // Computed
   get numberOfCompletedTasks(): number {
     let counter = 0;
     for (let task of this.tasksArr) {
@@ -31,6 +32,7 @@ class TasksStore {
     return counter;
   }
 
+  // Computed
   get numberOfTasksPerUser(): { [key: string]: number } {
     const res: { [key: string]: number } = {};
 
@@ -47,8 +49,10 @@ class TasksStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.getAllTasks();
   }
 
+  // Action
   async createTask(task: TaskToBeCreated) {
     const isSuccessRequest = await this.genericAPIRequest(Method.POST, `${process.env.API}/task`, task);
 
@@ -66,14 +70,17 @@ class TasksStore {
     }
   }
 
+  // Action
   editTask(todo_index: number) {
     this.currentlyEditingTaskIndex = todo_index;
   }
 
+  // Action
   discardEditTask() {
     this.currentlyEditingTaskIndex = null;
   }
 
+  // Action
   async saveEditedTask(task_id: string, editedTask: TaskToBeEdited, task_index: number) {
     const isSuccessRequest = await this.genericAPIRequest(Method.PUT, `${process.env.API}/task/${task_id}`, editedTask);
 
@@ -85,6 +92,7 @@ class TasksStore {
     }
   }
 
+  // Action
   async deleteTask(task_id_with_token: { id: string; token: string }) {
     const bodyToSend = { token: task_id_with_token.token };
     const isSuccessRequest = await this.genericAPIRequest(
@@ -100,16 +108,14 @@ class TasksStore {
     }
   }
 
+  // Action
   filterTasksByTaskID(task_id: string) {
     this.genericAPIRequest(Method.GET, `${process.env.API}/task/${task_id}`);
   }
 
+  // Action
   filterTasksByUserID(user_id: string) {
     this.genericAPIRequest(Method.GET, `${process.env.API}/tasks?userId=${user_id}`);
-  }
-
-  getAllTasks() {
-    this.genericAPIRequest(Method.GET, `${process.env.API}/tasks`);
   }
 
   private genericAPIRequest = (method: Method, api: string, body?: any): Promise<boolean> => {
@@ -167,10 +173,14 @@ class TasksStore {
     return isSuccessRequest;
   }
 
-  *flow() {
-    const response: Task[] = yield fetch("http://example.com/value");
-
-    // return (yield response.json());
+  // Flow
+  *getAllTasks() {
+    const { data } = yield axios.get(`${process.env.API}/tasks`);
+    if (Array.isArray(data)) {
+      this.tasksArr.replace!(data);
+    } else if (data && Object.keys(data).length === 0) {
+      this.tasksArr.replace!([]);
+    }
   }
 }
 

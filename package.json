@@ -1,6 +1,6 @@
 {
-  "name": "assignment",
-  "version": "0.1.0",
+  "name": "Tasks Management",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "npx next dev & cd server; lapis server",
@@ -8,7 +8,8 @@
     "dev-client": "npx next dev",
     "dev-edits": "npx next dev & cd server; while inotifywait -r -e modify .; do lapis server stop && lapis server; done",
     "build": "next build",
-    "start": "next start",
+    "start-client": "next start",
+    "start": "npx next start & cd server; lapis server",
     "lint": "next lint"
   },
   "dependencies": {

@@ -30,6 +30,8 @@ const FuncRelatedToTasks = (props: Props) => {
   const userUseStateData: UserUseState = useContext(UserContext);
   const { user } = userUseStateData;
 
+  const [notifier, setNotifier] = useState<number>(-1); // Used to tell sibling components, that when clicked Updated All Tasks from genericButton - so it will change back the filter to "No Filter" in ApplyFilter component
+
   const openCreateNewTaskModal = () => {
     if (user === null) {
       toast.error("You must be logged in to create a new task");
@@ -41,6 +43,7 @@ const FuncRelatedToTasks = (props: Props) => {
 
   const updateAllTasks = () => {
     tasksStore.getAllTasks();
+    setNotifier((oldNotifierValue) => oldNotifierValue + 1);
   };
 
   return (
@@ -53,7 +56,7 @@ const FuncRelatedToTasks = (props: Props) => {
         <GenericDebounceButton timeToWaitInMS={7000} text={"Update All Tasks"} func={updateAllTasks} />
       </div>
 
-      <ApplySearchFilter filterByOptions={filterByOptions} />
+      <ApplySearchFilter filterByOptions={filterByOptions} notifier={notifier} />
     </div>
   );
 };
