@@ -31,3 +31,9 @@
 .task div button:first-of-type {
   margin: 0px 10px;
 }
+
+#firstLineContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}

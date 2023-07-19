@@ -62,9 +62,6 @@ RUN luarocks install lapis
 # For JWT
 RUN luarocks install luajwtjitsi
 
-# uuid for MySQL new insertions
-RUN luarocks install uuid
-
 # LuaSQL MySQL
 RUN luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql
 

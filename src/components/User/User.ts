@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 export type User = {
   username: string;
   password?: string;
-  token?: string;
+  token: string;
 };
 
 export type UserUseState = {

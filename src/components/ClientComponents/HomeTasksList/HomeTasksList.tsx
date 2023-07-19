@@ -2,17 +2,18 @@
 "use client";
 
 import styles from "./HomeTasksList.module.css";
-import Task from "../../Task/task";
+import Task, { CompletedOptions } from "../../Task/task";
 import React, { useContext, useLayoutEffect, useState } from "react";
 import tasksStore from "../../Task/tasks-store";
 
 import { observer } from "mobx-react";
-import Checkbox from "../Checkbox/Checkbox";
+import Checkbox from "../../utilsComponents/Checkbox/Checkbox";
 import UserContext from "../../context/UserContext";
 import { UserUseState } from "../../User/User";
 import ApplySearchFilter from "./ApplySearchFilter";
 import NewTaskModal from "./NewTaskModal";
 import { toast } from "react-toastify";
+import GenericDebounceButton from "@/components/utilsComponents/GenericDebounceButton";
 
 export enum FilterBy {
   No_Filter = 0,
@@ -42,7 +43,7 @@ const HomeTasksList = ({ Tasks }: Props) => {
     tasksStore.tasksArr = Tasks;
   }, []);
 
-  // console.log("This is my tasks", Tasks);
+  console.log("This is my tasks", Tasks);
   // console.log(tasksStore.tasksArr);
 
   const openCreateNewTaskModal = () => {
@@ -54,19 +55,49 @@ const HomeTasksList = ({ Tasks }: Props) => {
     setIsOpenedNewTaskModal(true);
   };
 
+  const updateAllTasks = () => {
+    tasksStore.getAllTasks();
+  };
+
+  const deleteTask = (task_id: string) => {
+    if (user === null) {
+      toast.error("You must be logged in to remove a task");
+      return;
+    }
+
+    tasksStore.deleteTask({
+      id: task_id,
+      token: user?.token,
+    });
+  };
+
+  console.log(tasksStore.numberOfCompletedTasksPerUser);
+
   return (
     <div id={styles.wrapperTasks}>
-      <button onClick={openCreateNewTaskModal}>Create New Task</button>
       {isOpenedNewTaskModal && <NewTaskModal setIsOpenedNewTaskModal={setIsOpenedNewTaskModal} />}
 
-      <button>Update All Tasks</button>
+      <div id={styles.firstLineContainer}>
+        <div>Number of completed tasks: {tasksStore.numberOfCompletedTasks}</div>
+
+        <ul>
+          {Object.keys(tasksStore.numberOfCompletedTasksPerUser).map((currUser: string, index: number) => (
+            <li key={currUser + index}>
+              {currUser}: {tasksStore.numberOfCompletedTasksPerUser[currUser]}
+            </li>
+          ))}
+        </ul>
+
+        <button onClick={openCreateNewTaskModal}>Create New Task</button>
+        <GenericDebounceButton timeToWaitInMS={7000} text={"Update All Tasks"} func={updateAllTasks} />
+      </div>
 
       <ApplySearchFilter filterByOptions={filterByOptions} />
 
       <div>
         {tasksStore.tasksArr.map((todo: Task) => (
           <div key={todo.id} className={styles.task}>
-            <Checkbox isCompleted={todo.completed} amITheOwner={todo.user_id === user?.username} />
+            <Checkbox isCompleted={todo.completed == CompletedOptions.TRUE} amITheOwner={todo.user_id === user?.username} />
             <div className={`${styles.titleAndDescription} ${styles.titleAndDescriptionNames}`}>
               <div>Title:</div>
               <div>Description:</div>
@@ -79,7 +110,7 @@ const HomeTasksList = ({ Tasks }: Props) => {
             {todo.user_id === user?.username && (
               <div>
                 <button>Edit</button>
-                <button>Remove</button>
+                <button onClick={() => deleteTask(todo.id)}>Remove</button>
               </div>
             )}
           </div>

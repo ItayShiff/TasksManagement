@@ -1,7 +1,5 @@
 local utils = require("utils")
-local uuid = require("uuid")
 local socket = require("socket")
-uuid.randomseed(socket.gettime()*10000)
 
 db = {}    -- Global variable
 
@@ -66,16 +64,15 @@ function db.UpdateSpecificTask(user_id, task_id, newTitle, newDescription, newCo
   db.conn:execute(query)
 end
 
-function db.InsertNewTask(user_id, title, description, completed)
-  local new_task_id = uuid()
-  local newCompletedValue = 1
-  if (completed == "false") then
-    newCompletedValue = 0
-  end
-  
+function db.InsertNewTask(user_id, task_id, title, description, completed)
+  -- local newCompletedValue = 1
+  -- if not completed then
+  --   newCompletedValue = 0
+  -- end
+
   local query = string.format("INSERT INTO Tasks VALUES ('%s', '%s', '%s', '%s', '%d')",
-                 user_id, new_task_id, title, description, newCompletedValue)
-  -- -- local status, err = db.conn:execute(query)
+                 user_id, task_id, title, description, completed)
+  -- local status, err = db.conn:execute(query)
   db.conn:execute(query)
 end
 

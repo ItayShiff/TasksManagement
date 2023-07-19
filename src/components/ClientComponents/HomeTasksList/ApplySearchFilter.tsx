@@ -36,8 +36,6 @@ const ApplySearchFilter = ({ filterByOptions }: Props) => {
     if (e.target.selectedIndex === FilterBy.No_Filter) {
       if (didApplyFilterAlready.current) {
         // This way, it will be call getAllTasks only if the user already filtered in the past, to avoid unnecessary API calls
-        console.log("called");
-
         tasksStore.getAllTasks();
         searchInput.current!.value = "";
         didApplyFilterAlready.current = false; // Resetting for next time

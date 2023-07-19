@@ -65,7 +65,7 @@ app:put("/task/:id", json_params(function(self)
   return { json = "good", status = 200 }
 end))
 
-
+-- Delete task by id (of task)
 app:delete("/task/:id", json_params(function(self)
   if not auth.validateUser(self.params.token) then
     return { json = { message = "Not authenticated"}, status = 401 }
@@ -87,12 +87,12 @@ app:post("/task", json_params(function(self)
   end
 
 
-  if (self.params.title == nil or self.params.description == nil or self.params.completed == nil) then
-    return { json = { message = "Missing title or description or completed parameter"}, status = 422 }
+  if (self.params.id == nil or self.params.title == nil or self.params.description == nil or self.params.completed == nil) then
+    return { json = { message = "Missing id or title or description or completed parameter"}, status = 422 }
   end
 
 
-  db.InsertNewTask(self.params.userId, self.params.title, self.params.description, self.params.completed)
+  db.InsertNewTask(self.params.userId, self.params.id, self.params.title, self.params.description, self.params.completed)
   return { json = "good", status = 200 }
 end))
 

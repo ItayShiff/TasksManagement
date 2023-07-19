@@ -323,3 +323,46 @@ stack traceback:
 2023/07/18 21:58:45 [alert] 4880#4880: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
 2023/07/18 22:14:33 [alert] 6309#6309: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
 2023/07/18 22:57:47 [alert] 13344#13344: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 00:05:40 [alert] 20053#20053: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:19:12 [alert] 30503#30503: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:19:12 [error] 30503#30503: init_by_lua error: ./dbController.lua:2: module 'uuid' not found:
+	no field package.preload['uuid']
+	no file '/usr/local/openresty/site/lualib/uuid.ljbc'
+	no file '/usr/local/openresty/site/lualib/uuid/init.ljbc'
+	no file '/usr/local/openresty/lualib/uuid.ljbc'
+	no file '/usr/local/openresty/lualib/uuid/init.ljbc'
+	no file '/usr/local/openresty/site/lualib/uuid.lua'
+	no file '/usr/local/openresty/site/lualib/uuid/init.lua'
+	no file '/usr/local/openresty/lualib/uuid.lua'
+	no file '/usr/local/openresty/lualib/uuid/init.lua'
+	no file './uuid.lua'
+	no file '/usr/local/openresty/luajit/share/luajit-2.1.0-beta3/uuid.lua'
+	no file '/usr/local/share/lua/5.1/uuid.lua'
+	no file '/usr/local/share/lua/5.1/uuid/init.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/uuid.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/uuid/init.lua'
+	no file '/usr/local/openresty/site/lualib/uuid.so'
+	no file '/usr/local/openresty/lualib/uuid.so'
+	no file './uuid.so'
+	no file '/usr/local/lib/lua/5.1/uuid.so'
+	no file '/usr/local/openresty/luajit/lib/lua/5.1/uuid.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+	[C]: in function 'require'
+	./dbController.lua:2: in main chunk
+	[C]: in function 'require'
+	init_by_lua:3: in main chunk
+2023/07/19 01:20:09 [alert] 30997#30997: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:22:17 [alert] 911#911: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:23:02 [alert] 1476#1476: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:23:25 [alert] 1606#1606: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:23:29 [alert] 1677#1677: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 01:56:37 [alert] 7123#7123: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:09:42 [alert] 11704#11704: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:12:57 [alert] 12433#12433: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:16:37 [alert] 14245#14245: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:31:33 [alert] 20185#20185: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:31:46 [alert] 20516#20516: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:33:33 [alert] 21694#21694: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 02:54:50 [alert] 28659#28659: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22
+2023/07/19 03:03:24 [alert] 1449#1449: lua_code_cache is off; this will hurt performance in /home/itay/work assignment/assignment/server/nginx.conf.compiled:22

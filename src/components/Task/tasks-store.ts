@@ -1,6 +1,13 @@
-import axios from "axios";
-import Task from "./task";
+import axios, { AxiosResponse } from "axios";
+import Task, { TaskToBeCreated } from "./task";
 import { makeAutoObservable, observable, computed, action, runInAction } from "mobx";
+
+enum Method {
+  GET,
+  POST,
+  DELETE,
+  PUT,
+}
 
 // This is made to allow the functionality of ObservableArrayAdministration because we want to utilize the replace method to change observable array data,
 // There isn't ObservableArrayAdministration<Task> so this is so the solution I came up with
@@ -9,8 +16,6 @@ type TaskArray = Task[] & {
 };
 
 class TasksStore {
-  // tasksArr: Task[] = [];
-  // tasksArr: any = [];
   tasksArr: TaskArray = [] as TaskArray;
 
   get numberOfCompletedTasks(): number {
@@ -24,55 +29,99 @@ class TasksStore {
     return counter;
   }
 
+  get numberOfCompletedTasksPerUser(): { [key: string]: number } {
+    const res: { [key: string]: number } = {};
+
+    for (let task of this.tasksArr) {
+      if (task.user_id in res) {
+        res[task.user_id]++;
+      } else {
+        res[task.user_id] = 1;
+      }
+    }
+
+    return res;
+  }
+
   constructor() {
     makeAutoObservable(this);
   }
 
-  createTask() {
-    // this.githubProjects = []
-    // this.state = "pending"
-    // fetchGithubProjectsSomehow().then(
-    //     action("fetchSuccess", projects => {
-    //         const filteredProjects = somePreprocessing(projects)
-    //         this.githubProjects = filteredProjects
-    //         this.state = "done"
-    //     }),
-    //     action("fetchError", () => {
-    //         this.state = "error"
-    //     })
-    // )
-    // this.tasksArr.push(new Task())
+  createTask(task: TaskToBeCreated) {
+    this.genericAPIRequest(Method.POST, `${process.env.API}/task`, task);
+    const newTask: Task = {
+      id: task.id,
+      user_id: task.userId,
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+    };
+
+    this.tasksArr.push(newTask);
   }
 
   editTask() {}
 
-  deleteTask() {}
+  deleteTask(task_id_with_token: { id: string; token: string }) {
+    const bodyToSend = { token: task_id_with_token.token };
+    this.genericAPIRequest(Method.DELETE, `${process.env.API}/task/${task_id_with_token.id}`, bodyToSend);
+
+    const updatedTasksArr = this.tasksArr.filter((currTask) => currTask.id !== task_id_with_token.id);
+    this.tasksArr.replace!(updatedTasksArr);
+  }
 
   filterTasksByTaskID(task_id: string) {
-    this.genericGetUpdateTasks(`${process.env.API}/task/${task_id}`);
+    this.genericAPIRequest(Method.GET, `${process.env.API}/task/${task_id}`);
   }
 
   filterTasksByUserID(user_id: string) {
-    this.genericGetUpdateTasks(`${process.env.API}/tasks?userId=${user_id}`);
+    this.genericAPIRequest(Method.GET, `${process.env.API}/tasks?userId=${user_id}`);
   }
 
   getAllTasks() {
-    this.genericGetUpdateTasks(`${process.env.API}/tasks`);
+    this.genericAPIRequest(Method.GET, `${process.env.API}/tasks`);
   }
 
-  async genericGetUpdateTasks(api: string) {
-    try {
-      const { data } = await axios.get(api);
+  private genericAPIRequest = (method: Method, api: string, body?: any) => {
+    let nextCall: Promise<AxiosResponse<any, any>>;
+    switch (method) {
+      case Method.GET:
+        nextCall = axios.get(api);
+        break;
 
+      case Method.POST:
+        nextCall = axios.post(api, body);
+        break;
+
+      case Method.DELETE:
+        nextCall = axios.delete(api, { data: body });
+        break;
+
+      case Method.PUT:
+        nextCall = axios.put(api, body);
+        break;
+    }
+
+    this.executeGenericAPIRequest(nextCall);
+  };
+
+  private async executeGenericAPIRequest(APICall: Promise<AxiosResponse<any, any>>) {
+    let res: TaskArray;
+    try {
+      const { data } = await APICall;
+      res = data;
+    } catch (err: any) {
+      console.log(err.message);
+      res = [];
+      console.log("WHAAAAAAAAAAAAAAAAAAAT why here??", err);
+    }
+
+    try {
       runInAction(() => {
         // This is equal to doing - this.tasksArr = data , doing it with "replace" because it's observableArray of MobX
-        this.tasksArr.replace!(data);
+        this.tasksArr.replace!(res);
       });
-    } catch (err) {
-      runInAction(() => {
-        this.tasksArr = [];
-      });
-    }
+    } catch (err: any) {}
   }
 
   *flow() {
