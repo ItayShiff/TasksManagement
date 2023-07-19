@@ -7,9 +7,6 @@ function db.connect()
   local driver = require("luasql.mysql")
   local env = driver.mysql()
   return env:connect("todoDatabase", "itay", "asdASD123!@#", "127.0.0.1") -- Must have 127.0.0.1 as param to connect to localhost from lapis server & docker
-  -- if not conn then
-  --   print("Error!", err)
-  -- end
 end
 
 
@@ -23,8 +20,6 @@ local function QueryTasks(query)
   local result = {};
   
   while row do  -- Scan for next rows if existing
-    -- print(row.user_id,row.id,row.title,row.description,row.completed)
-
     table.insert(result, {
       user_id = row.user_id,
       id = row.id,
@@ -60,19 +55,12 @@ end
 
 function db.UpdateSpecificTask(user_id, task_id, newTitle, newDescription, newCompleted)
   local query = string.format("UPDATE Tasks SET title='%s', description='%s', completed=%d where id='%s'", newTitle, newDescription, newCompleted, task_id)
-  -- local status, err = db.conn:execute(query)
   db.conn:execute(query)
 end
 
 function db.InsertNewTask(user_id, task_id, title, description, completed)
-  -- local newCompletedValue = 1
-  -- if not completed then
-  --   newCompletedValue = 0
-  -- end
-
   local query = string.format("INSERT INTO Tasks VALUES ('%s', '%s', '%s', '%s', '%d')",
                  user_id, task_id, title, description, completed)
-  -- local status, err = db.conn:execute(query)
   db.conn:execute(query)
 end
 
@@ -98,7 +86,6 @@ end
 
 function db.DeleteSpecificTask(task_id)
   local query = string.format("DELETE FROM Tasks where id='%s'", task_id)
-  -- local status, err = db.conn:execute(query)
   db.conn:execute(query)
 end
 
