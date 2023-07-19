@@ -1,13 +1,11 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import Task from "../components/Task/task";
 import HomeTasksList from "@/components/ClientComponents/HomeTasksList/HomeTasksList";
-import axios from "axios";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Task Management Homepage",
+  title: "Home | Task Management",
   description: "A site that allows you to manage your tasks",
 };
 

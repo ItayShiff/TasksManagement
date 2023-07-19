@@ -1,0 +1,81 @@
+#center {
+  min-height: calc(100vh - 52px - 26px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#wrapperToWrapperSignIn {
+  background: #e4e4e4;
+  width: 100%;
+  padding: 15px;
+}
+#wrapperSignIn {
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 0 5px 1px grey;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  text-align: left;
+  margin-left: 5%;
+}
+
+.input {
+  margin-bottom: 25px;
+  width: 90%;
+  margin-top: 10px;
+}
+
+#signInTitle {
+  font-size: 22px;
+  margin-bottom: 10px;
+  padding: 10px 0px;
+}
+
+.buttonsWrapper {
+  display: flex;
+}
+
+.buttonsWrapper button {
+  width: 50%;
+  border-radius: 0;
+  padding: 10px;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.buttonsWrapper button span {
+  margin-left: 5px;
+}
+
+#signInTitle,
+.buttonsWrapper button {
+  background: #dedede;
+}
+
+#passwordWrapper {
+  position: relative;
+  right: -7px;
+}
+#passwordWrapper span {
+  position: relative;
+  cursor: pointer;
+  left: -16px;
+}
+
+/* #passwordWrapper span::after { */
+.shownPassword::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7.5px;
+  border-top: 2px solid rgb(24, 24, 24);
+  width: 105%;
+  transform: rotate(-45deg);
+  /* transform-origin: 0% 0%; */
+}
